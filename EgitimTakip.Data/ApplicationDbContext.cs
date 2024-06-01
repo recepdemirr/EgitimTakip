@@ -20,20 +20,19 @@ namespace EgitimTakip.Data
         }
 
         public virtual DbSet<AppUser> Users { get; set; }
-        public virtual DbSet<Training> Trainings { get; set; }
         public virtual DbSet<Company> Companies { get; set; }
         public virtual DbSet<Employee> Employees { get; set; }
-        public virtual DbSet<TrainingSubjects> TrainingSubjects { get; set; }
+        public virtual DbSet<Training> Trainings { get; set; }
+        public virtual DbSet<TrainingSubject> TrainingSubjects { get; set; }
+        public virtual DbSet<TrainingsSubjectsMap> TrainingsSubjectsMaps { get; set; }
 
 
-      protected override void OnModelCreating(ModelBuilder modelBuilder)
+        //FLUENT API
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<TrainingSubjectsMap>().HasKey(x => new
-            {
-                x.TrainingId,x.TrainingSubjectId
-            });
+            modelBuilder.Entity<TrainingsSubjectsMap>().HasKey(x => new { x.TrainingId, x.TrainingSubjectId });
         }
+
 
     }
 }
-
