@@ -9,6 +9,6 @@ namespace EgitimTakip.Models
     public class TrainingCategory : BaseModel
     {
         public string Name { get; set; }
-        public virtual ICollection<TrainingSubject> TrainingSubjects { get; set; }
+        public virtual ICollection<TrainingSubject> Subjects { get; set; }
     }
 }
