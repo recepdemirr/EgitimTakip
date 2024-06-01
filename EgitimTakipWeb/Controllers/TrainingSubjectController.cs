@@ -22,7 +22,7 @@ namespace EgitimTakipWeb.Controllers
             return Json(new {data = result});
         }
         [HttpPost]
-        public IActionResult Add(TrainingSubjects trainingSubject)
+        public IActionResult Add(TrainingSubject trainingSubject)
         {
             _context.TrainingSubjects.Add(trainingSubject);
             _context.SaveChanges();
@@ -31,13 +31,13 @@ namespace EgitimTakipWeb.Controllers
         public IActionResult Delete (int id)
         {
             //SOFT DELETE
-            TrainingSubjects trainingSubjects = _context.TrainingSubjects.Find(id);
+            TrainingSubject trainingSubjects = _context.TrainingSubjects.Find(id);
             trainingSubjects.IsDeleted = true;
             _context.SaveChanges();
             return Ok(trainingSubjects);
         }
         [HttpPost]
-        public IActionResult Update (TrainingSubjects trainingSubject)
+        public IActionResult Update (TrainingSubject trainingSubject)
         {
 
             _context.TrainingSubjects.Update(trainingSubject);

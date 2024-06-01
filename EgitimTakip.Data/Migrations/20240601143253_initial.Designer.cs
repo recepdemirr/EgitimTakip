@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EgitimTakip.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240526160205_addTrainingSubjectManuelMapTable")]
-    partial class addTrainingSubjectManuelMapTable
+    [Migration("20240601143253_initial")]
+    partial class initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -36,11 +36,15 @@ namespace EgitimTakip.Data.Migrations
                     b.Property<DateTime>("DateCreated")
                         .HasColumnType("datetime2");
 
+                    b.Property<bool>("IsAdmin")
+                        .HasColumnType("bit");
+
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<int>("Password")
-                        .HasColumnType("int");
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserName")
                         .IsRequired()
@@ -59,6 +63,9 @@ namespace EgitimTakip.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int>("AppUserId")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("DateCreated")
                         .HasColumnType("datetime2");
 
@@ -69,12 +76,9 @@ namespace EgitimTakip.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("AppUserId");
 
                     b.ToTable("Companies");
                 });
@@ -104,14 +108,9 @@ namespace EgitimTakip.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("TrainingId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.HasIndex("CompanyId");
-
-                    b.HasIndex("TrainingId");
 
                     b.ToTable("Employees");
                 });
@@ -143,7 +142,30 @@ namespace EgitimTakip.Data.Migrations
                     b.ToTable("Trainings");
                 });
 
-            modelBuilder.Entity("EgitimTakip.Models.TrainingSubjects", b =>
+            modelBuilder.Entity("EgitimTakip.Models.TrainingCategory", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("DateCreated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("TrainingCategories");
+                });
+
+            modelBuilder.Entity("EgitimTakip.Models.TrainingSubject", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -165,12 +187,17 @@ namespace EgitimTakip.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("TrainingCategoryId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("TrainingCategoryId");
 
                     b.ToTable("TrainingSubjects");
                 });
 
-            modelBuilder.Entity("EgitimTakip.Models.TrainingSubjectsMap", b =>
+            modelBuilder.Entity("EgitimTakip.Models.TrainingsSubjectsMap", b =>
                 {
                     b.Property<int>("TrainingId")
                         .HasColumnType("int");
@@ -185,14 +212,29 @@ namespace EgitimTakip.Data.Migrations
 
                     b.HasIndex("TrainingSubjectId");
 
-                    b.ToTable("TrainingSubjectsMap");
+                    b.ToTable("TrainingsSubjectsMaps");
+                });
+
+            modelBuilder.Entity("EmployeeTraining", b =>
+                {
+                    b.Property<int>("EmployeesId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TrainingsId")
+                        .HasColumnType("int");
+
+                    b.HasKey("EmployeesId", "TrainingsId");
+
+                    b.HasIndex("TrainingsId");
+
+                    b.ToTable("EmployeeTraining");
                 });
 
             modelBuilder.Entity("EgitimTakip.Models.Company", b =>
                 {
                     b.HasOne("EgitimTakip.Models.AppUser", "User")
                         .WithMany("Companies")
-                        .HasForeignKey("UserId")
+                        .HasForeignKey("AppUserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -206,10 +248,6 @@ namespace EgitimTakip.Data.Migrations
                         .HasForeignKey("CompanyId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("EgitimTakip.Models.Training", null)
-                        .WithMany("Employees")
-                        .HasForeignKey("TrainingId");
 
                     b.Navigation("Company");
                 });
@@ -225,16 +263,27 @@ namespace EgitimTakip.Data.Migrations
                     b.Navigation("Company");
                 });
 
-            modelBuilder.Entity("EgitimTakip.Models.TrainingSubjectsMap", b =>
+            modelBuilder.Entity("EgitimTakip.Models.TrainingSubject", b =>
+                {
+                    b.HasOne("EgitimTakip.Models.TrainingCategory", "TrainingCategory")
+                        .WithMany("TrainingSubjects")
+                        .HasForeignKey("TrainingCategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("TrainingCategory");
+                });
+
+            modelBuilder.Entity("EgitimTakip.Models.TrainingsSubjectsMap", b =>
                 {
                     b.HasOne("EgitimTakip.Models.Training", "Training")
-                        .WithMany("TrainingSubjectsMap")
+                        .WithMany("TrainingsSubjectsMap")
                         .HasForeignKey("TrainingId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("EgitimTakip.Models.TrainingSubjects", "TrainingSubject")
-                        .WithMany("TrainingSubjectsMap")
+                    b.HasOne("EgitimTakip.Models.TrainingSubject", "TrainingSubject")
+                        .WithMany("TrainingsSubjectsMap")
                         .HasForeignKey("TrainingSubjectId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -242,6 +291,21 @@ namespace EgitimTakip.Data.Migrations
                     b.Navigation("Training");
 
                     b.Navigation("TrainingSubject");
+                });
+
+            modelBuilder.Entity("EmployeeTraining", b =>
+                {
+                    b.HasOne("EgitimTakip.Models.Employee", null)
+                        .WithMany()
+                        .HasForeignKey("EmployeesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("EgitimTakip.Models.Training", null)
+                        .WithMany()
+                        .HasForeignKey("TrainingsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("EgitimTakip.Models.AppUser", b =>
@@ -256,14 +320,17 @@ namespace EgitimTakip.Data.Migrations
 
             modelBuilder.Entity("EgitimTakip.Models.Training", b =>
                 {
-                    b.Navigation("Employees");
-
-                    b.Navigation("TrainingSubjectsMap");
+                    b.Navigation("TrainingsSubjectsMap");
                 });
 
-            modelBuilder.Entity("EgitimTakip.Models.TrainingSubjects", b =>
+            modelBuilder.Entity("EgitimTakip.Models.TrainingCategory", b =>
                 {
-                    b.Navigation("TrainingSubjectsMap");
+                    b.Navigation("TrainingSubjects");
+                });
+
+            modelBuilder.Entity("EgitimTakip.Models.TrainingSubject", b =>
+                {
+                    b.Navigation("TrainingsSubjectsMap");
                 });
 #pragma warning restore 612, 618
         }
