@@ -10,6 +10,6 @@ namespace EgitimTakip.Models
     {
         public string Name { get; set; }
         public string Code { get; set; }
-
+        public virtual ICollection<TrainingSubjectsMap> TrainingSubjectsMap { get; set; }
     }
 }

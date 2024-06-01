@@ -12,6 +12,7 @@ namespace EgitimTakip.Models
         public int CompanyId { get; set; }
         public virtual Company Company { get; set; }
         public virtual ICollection<Employee> Employees { get; set; }= new List<Employee>();
-        public virtual ICollection<Training> Trainings { get; set; }= new List<Training>();
+        
+        public virtual ICollection<TrainingSubjectsMap>  TrainingSubjectsMap { get; set; }
     }
 }
