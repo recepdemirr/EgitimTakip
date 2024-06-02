@@ -18,6 +18,9 @@
     <link href="~/assets/css/icons.min.css" rel="stylesheet" type="text/css" />
     <!-- App Css-->
     <link href="~/assets/css/app.min.css" id="app-style" rel="stylesheet" type="text/css" />
+    <!-- DataTables -->
+    <link href="~/assets/libs/datatables.net-bs4/css/dataTables.bootstrap4.min.css" rel="stylesheet" type="text/css" />
+    <link href /assets/libs/datatables.net-buttons-bs4/css/buttons.bootstrap4.min.css" rel="stylesheet" type="text/css" />
     @await RenderSectionAsync("styles", false);
 
 </head>
@@ -290,7 +293,7 @@
                         </div>
                     </div>
 
-                    
+
 
                 </div>
             </div>
@@ -345,17 +348,17 @@
                             </a>
                             <ul class="sub-menu" aria-expanded="true">
                                 <li>
-                                    <a asp-controller="TrainingCategory" >Eğitim Kategorileri </a>
-                                 
+                                    <a class="bx bx-dock-left" asp-controller="TrainingCategory">Eğitim Kategorileri </a>
+
                                 </li>
                                 <li>
                                     <a href="" </a>
-                                    
+
                                 </li>
                             </ul>
-                        </li>                       
+                        </li>
 
-                        
+
 
                     </ul>
                 </div>
@@ -530,10 +533,13 @@
     <script src="~/assets/libs/simplebar/simplebar.min.js"></script>
     <script src="~/assets/libs/node-waves/waves.min.js"></script>
     <script src="~/assets/libs/waypoints/lib/jquery.waypoints.min.js"></script>
-    <script src="~/~/assets/libs/jquery.counterup/jquery.counterup.min.js"></script>
+    <script src="~/assets/libs/jquery.counterup/jquery.counterup.min.js"></script>
+    <!-- Required datatable js -->
+    <script src="~/assets/libs/datatables.net/js/jquery.dataTables.min.js"></script>
+    <script src="~/assets/libs/datatables.net-bs4/js/dataTables.bootstrap4.min.js"></script>
 
     <!-- App js -->
     <script src="~/assets/js/app.js"></script>
-    @await RenderSectionAsync("script",false);
+    @await RenderSectionAsync("Script", false);
 </body>
 </html>
